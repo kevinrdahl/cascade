@@ -1,8 +1,11 @@
-def select(people, numAdopters):
+def select(people, budget):
 
 	people.sort(key=degree)
+	ret = []
+	for person in people[-budget:]:
+		ret.append(person['id'])
 
-	return people[-numAdopters:]
+	return ret
 
 def degree(person):
 
