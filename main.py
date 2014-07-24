@@ -17,6 +17,12 @@ for edge in f:
 	
 f.close()
 
+nodeList = []
+for node in network:
+	nodeList.append(network[node])
+network = nodeList
+del nodeList
+
 print 'LOADED!'
 
-cascade.tryCascade(network, [1,2,3,4,5])
+cascade.tryCascade(network, [1,2,3,4,5,6,7,8,9,10])

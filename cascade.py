@@ -1,7 +1,7 @@
 def tryCascade(network, adopters):
 	neighbours = []
 
-	for i in network:
+	for i in range(len(network)):
 		network[i]['adopted'] = False
 		network[i]['threshold'] = 0.3 #temporary
 		
