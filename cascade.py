@@ -1,5 +1,6 @@
 def tryCascade(network, adopters):
 	neighbours = []
+	rounds = 0
 
 	for i in range(len(network)):
 		network[i]['adopted'] = False
@@ -7,6 +8,8 @@ def tryCascade(network, adopters):
 		
 	# while there are new adopters
 	while len(adopters) > 0:
+		rounds += 1
+	
 		# make this change first to prevent including adopters as neighbours
 		for i in adopters:
 			network[i]['adopted'] = True
@@ -39,4 +42,5 @@ def tryCascade(network, adopters):
 		if (network[i]['adopted']):
 			numAdopters += 1
 			
-	print (str(numAdopters) + ' adopters of ' + str(len(network)) + ' people')
+	print ('network of ' + str(len(network)))
+	print (str(numAdopters) + ' adopters in ' + str(rounds) + ' rounds')
