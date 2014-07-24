@@ -28,8 +28,8 @@ for node in network:
 network = nodeList
 del nodeList
 
-print 'LOADED'
+print 'LOADED (' + str(len(network)) + ')'
 
 adopters = degree.select(network, 10)
 
-cascade.tryCascade(network, range(100,500))
+cascade.tryCascade(network, range(100,1000))
