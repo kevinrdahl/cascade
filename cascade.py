@@ -3,14 +3,34 @@ def tryCascade(network, adopters):
 
 	for i in network:
 		network[i]['adopted'] = False
+		network[i]['threshold'] = 0.3 #temporary
 		
+	# while there are new adopters
 	while len(adopters) > 0:
+		# make this change first to prevent including adopters as neighbours
 		for i in adopters:
-			adopters[i]['adopted'] = true
+			network[i]['adopted'] = True
+			print(str(i) + ' adopts')
 		
+		# add each neighbour of new adopters to neighbours
 		for i in adopters:
-			for j in adopters[i]['friends']:
-				if not j in neighbours:
+			for j in network[i]['friends']:
+				if j not in neighbours:
 					neighbours.append(j)
 					
+		adopters[:] = []
+					
+		# determine whether each of these neighbours would adopt
+		for i in neighbours:
+			if i in adopters:
+				continue
 		
+			node = network[i]
+			numAdopted = 0
+			for j in node['friends']:
+				if network[j]['adopted']:
+					numAdopted += 1
+			if float(numAdopted/len(node['friends'])) > node['threshold']:
+				adopters.append(i)
+				
+		neighbours[:] = []

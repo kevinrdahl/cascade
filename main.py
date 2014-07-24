@@ -1,6 +1,8 @@
 import sys
 import io
 
+import cascade
+
 f = open(sys.argv[1], 'r');
 
 network = {}
@@ -15,4 +17,6 @@ for edge in f:
 	
 f.close()
 
-print(network)
+print 'LOADED!'
+
+cascade.tryCascade(network, [1,2,3,4,5])
