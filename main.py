@@ -4,7 +4,12 @@ import io
 import cascade
 import degree
 
+if (len(sys.argv) != 3):
+	print 'python main.py <network file> <budget>'
+	quit()
+
 f = open(sys.argv[1], 'r');
+budget = int(sys.argv[2])
 
 network = {}
 
@@ -30,6 +35,6 @@ del nodeList
 
 print 'LOADED (' + str(len(network)) + ')'
 
-adopters = degree.select(network, 10)
+adopters = degree.select(network, budget)
 
-cascade.tryCascade(network, range(100,1000))
+cascade.tryCascade(network, adopters)
