@@ -1,6 +1,9 @@
-def degreeSelect(numAdopters, people):
+def select(people, numAdopters):
 
-	people.sort(len(person['friends']))
+	people.sort(key=degree)
 
 	return people[-10]
 
+def degree(person):
+
+	return len(person['friends'])
