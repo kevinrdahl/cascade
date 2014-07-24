@@ -10,12 +10,12 @@ def tryCascade(network, adopters):
 		# make this change first to prevent including adopters as neighbours
 		for i in adopters:
 			network[i]['adopted'] = True
-			print(str(i) + ' adopts')
+			print (str(i) + ' adopts')
 		
 		# add each neighbour of new adopters to neighbours
 		for i in adopters:
 			for j in network[i]['friends']:
-				if j not in neighbours:
+				if j not in neighbours and not network[j]['adopted']:
 					neighbours.append(j)
 					
 		adopters[:] = []
@@ -30,7 +30,7 @@ def tryCascade(network, adopters):
 			for j in node['friends']:
 				if network[j]['adopted']:
 					numAdopted += 1
-			if float(numAdopted/len(node['friends'])) > node['threshold']:
+			if (float(numAdopted)/len(node['friends'])) > node['threshold']:
 				adopters.append(i)
 				
 		neighbours[:] = []
