@@ -2,7 +2,7 @@ import sys
 import io
 
 import cascade
-import degree
+import centrality
 
 f = open(sys.argv[1], 'r');
 
@@ -30,6 +30,6 @@ del nodeList
 
 print 'LOADED (' + str(len(network)) + ')'
 
-adopters = degree.select(network, 10)
+adopters = centrality.degree(network, 10)
 
 cascade.tryCascade(network, range(100,1000))
