@@ -2,6 +2,7 @@ import sys
 import io
 
 import cascade
+import degree
 
 f = open(sys.argv[1], 'r');
 
@@ -28,5 +29,7 @@ network = nodeList
 del nodeList
 
 print 'LOADED'
+
+adopters = degree.select(network, 10)
 
 cascade.tryCascade(network, range(100,500))
