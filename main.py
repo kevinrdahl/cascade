@@ -14,7 +14,7 @@ for edge in f:
 	for i in range(len(nodes)):
 		node = int(nodes[i])
 		if node not in network:
-			network[node] = {'friends':[]}
+			network[node] = {'id':node, 'friends':[]}
 			if len(network) % 250 == 0:
 				print '   ' + str(len(network))
 		network[node]['friends'].append(int(nodes[(i+1)%2]))
