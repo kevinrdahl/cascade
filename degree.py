@@ -2,7 +2,7 @@ def select(people, numAdopters):
 
 	people.sort(key=degree)
 
-	return people[-10]
+	return people[-numAdopters:]
 
 def degree(person):
 
