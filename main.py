@@ -2,7 +2,7 @@ import sys
 import io
 
 import cascade
-import degree
+import centrality
 
 if (len(sys.argv) != 3):
 	print 'python main.py <network file> <budget>'
@@ -35,6 +35,6 @@ del nodeList
 
 print 'LOADED (' + str(len(network)) + ')'
 
-adopters = degree.select(network, budget)
+adopters = centrality.degree(network, 10)
 
 cascade.tryCascade(network, adopters)
