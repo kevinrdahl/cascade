@@ -41,13 +41,13 @@ def betweenness(network):
 		while i > 0:
 			layer = layers[i]
 			for node2 in layer:
-				ret[node2] = layer[node2]['flow']
+				ret[node2] += layer[node2]['flow']
 				flow = float(1 + layer[node2]['flow']) / len(layer[node2]['parents'])
 				for parent in layer[node2]['parents']:
 					layers[i-1][parent]['flow'] += flow
 			i -= 1
 			
-		for i in range(len(ret)):
-			ret[i] = (i, ret[i])
+	for i in range(len(ret)):
+		ret[i] = (i, ret[i])
 	return ret
 					
