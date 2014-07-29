@@ -5,7 +5,7 @@ import cascade
 import centrality
 
 if (len(sys.argv) != 4):
-	print 'python main.py <network file> <DEG/BTWN> <budget>'
+	print 'python main.py <network file> <DEG/BTWN/CLS> <budget>'
 	quit()
 
 f = open(sys.argv[1], 'r')
@@ -23,7 +23,7 @@ for edge in f:
 		if node not in network:
 			network[node] = {'id':node, 'friends':[]}
 			if len(network) % 250 == 0:
-				print '   ' + str(len(network))
+				print '  ' + str(len(network))
 		network[node]['friends'].append(int(nodes[(i+1)%2]))
 	
 f.close()
@@ -41,8 +41,12 @@ if method == 'DEG':
 	centralities = centrality.degree(network)
 elif method == 'BTWN':
 	centralities = centrality.betweenness(network)
+elif method == 'CLS':
+	centralities = centrality.closeness(network)
+elif method == 'RAND':
+	centralities = centrality.rand(network)
 else:
-	print 'method should be DEG or BTWN'
+	print 'method should be DEG, BTWN, or CLS'
 	quit()
 
 adopters = cascade.selectTopN(budget, centralities)

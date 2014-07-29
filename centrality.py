@@ -1,3 +1,5 @@
+import random
+
 def degree(network):
 	ret = []
 	for node in network:
@@ -15,7 +17,7 @@ def betweenness(network):
 		#BFS
 		layers = [ { node['id']:{'parents':[], 'flow':0, 'seen':False}} ]
 		layerNum = 1
-		seen = [False for node in network]
+		seen = [False for n in network]
 		seen[node['id']] = True
 		
 		while True:
@@ -51,3 +53,40 @@ def betweenness(network):
 		ret[i] = (i, ret[i])
 	return ret
 					
+#assumes that the graph is connected
+def closeness(network):
+	print '\nComputing network closeness (this may take some time)...'
+	
+	ret = [0 for node in network]
+	
+	for node in network:
+		if node['id'] % 100 == 0:
+			print '  ' + str(node['id']) + ' / ' + str(len(network))
+		depth = 0
+		prevLayer = {node['id']:0}
+		nextLayer = {}
+		seen = [False for n in network]
+		
+		seen[node['id']] = True
+		
+		while len(prevLayer) > 0:
+			depth += 1
+			for node2 in prevLayer:
+				for friend in network[node2]['friends']:
+					if not seen[friend] and friend not in nextLayer:
+						seen[friend] = True
+						nextLayer[friend] = 0
+						ret[node['id']] += depth
+						#print node['id']
+			prevLayer = nextLayer
+			nextLayer = {}
+			
+	num = len(network)-1
+	for i in range(len(ret)):
+		ret[i] = (i, num / float(ret[i]))
+	return ret
+	
+#go full retard as a baseline
+def rand(network):
+	random.seed()
+	return [(i,random.random()) for i in range(len(network))]
