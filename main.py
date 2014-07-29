@@ -4,12 +4,13 @@ import io
 import cascade
 import centrality
 
-if (len(sys.argv) != 3):
-	print 'python main.py <network file> <budget>'
+if (len(sys.argv) != 4):
+	print 'python main.py <network file> <DEG/BTWN> <budget>'
 	quit()
 
-f = open(sys.argv[1], 'r');
-budget = int(sys.argv[2])
+f = open(sys.argv[1], 'r')
+method = sys.argv[2]
+budget = int(sys.argv[3])
 
 network = {}
 
@@ -27,6 +28,7 @@ for edge in f:
 	
 f.close()
 
+# use network for centrality param
 nodeList = []
 for node in network:
 	nodeList.append(network[node])
@@ -35,6 +37,14 @@ del nodeList
 
 print 'LOADED (' + str(len(network)) + ')'
 
-adopters = cascade.selectTopN(budget, centrality.degree(network))
+if method == 'DEG':
+	centralities = centrality.degree(network)
+elif method == 'BTWN':
+	centralities = centrality.betweenness(network)
+else:
+	print 'method should be DEG or BTWN'
+	quit()
+
+adopters = cascade.selectTopN(budget, centralities)
 
 cascade.tryCascade(network, adopters)
