@@ -1,4 +1,8 @@
 def tryCascade(network, adopters):
+	print ''
+	print 'Initial Adopters:'
+	print adopters
+
 	neighbours = []
 	rounds = 0
 
@@ -42,5 +46,17 @@ def tryCascade(network, adopters):
 		if (network[i]['adopted']):
 			numAdopters += 1
 			
+	print ''
 	print ('network of ' + str(len(network)))
 	print (str(numAdopters) + ' adopters in ' + str(rounds) + ' rounds')
+	
+# centralities = [(id, value)*]	
+def selectTopN(budget, centralities):
+	centralities.sort(key=val, reverse=True)
+	adopters = []
+	for i in range(budget):
+		adopters.append(centralities[i][0])
+	return adopters
+	
+def val(iVal):
+	return iVal[1]

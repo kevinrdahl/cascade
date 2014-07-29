@@ -35,6 +35,6 @@ del nodeList
 
 print 'LOADED (' + str(len(network)) + ')'
 
-adopters = centrality.degree(network, 10)
+adopters = cascade.selectTopN(budget, centrality.degree(network))
 
 cascade.tryCascade(network, adopters)
