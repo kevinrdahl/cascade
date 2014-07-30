@@ -1,4 +1,5 @@
 import random
+import sys
 
 def degree(network):
 	ret = []
@@ -7,13 +8,14 @@ def degree(network):
 	return ret
 	
 def betweenness(network):
-	print '\nComputing network betweenness (this may take some time)...'
+	print '\nComputing network betweenness...'
 
 	ret = [0 for node in network]
+	netlen = len(network)
 	
 	for node in network:
-		if node['id'] % 100 == 0:
-			print '  ' + str(node['id']) + ' / ' + str(len(network))
+		sys.stdout.write('\r  ' + str(node['id']) + ' / ' + str(netlen) + ' (' + str(100*node['id']/netlen) + '%)')
+		sys.stdout.flush()
 		#BFS
 		layers = [ { node['id']:{'parents':[], 'flow':0, 'seen':False}} ]
 		layerNum = 1
@@ -39,7 +41,6 @@ def betweenness(network):
 					
 		#propagate flow upward
 		i = len(layers)-1
-		
 		while i > 0:
 			layer = layers[i]
 			for node2 in layer:
@@ -51,19 +52,21 @@ def betweenness(network):
 			
 	for i in range(len(ret)):
 		ret[i] = (i, ret[i])
+	print '\nComplete!'
 	return ret
 					
 #assumes that the graph is connected
 def closeness(network):
-	print '\nComputing network closeness (this may take some time)...'
+	print '\nComputing network closeness...'
 	
 	ret = [0 for node in network]
+	netlen = len(network)
 	
 	for node in network:
-		if node['id'] % 100 == 0:
-			print '  ' + str(node['id']) + ' / ' + str(len(network))
+		sys.stdout.write('\r  ' + str(node['id']) + ' / ' + str(netlen) + ' (' + str(100*node['id']/netlen) + '%)')
+		sys.stdout.flush()
 		depth = 0
-		prevLayer = {node['id']:0}
+		prevLayer = {node['id']:0} #stupid but appears to perform better
 		nextLayer = {}
 		seen = [False for n in network]
 		
@@ -84,6 +87,7 @@ def closeness(network):
 	num = len(network)-1
 	for i in range(len(ret)):
 		ret[i] = (i, num / float(ret[i]))
+	print '\nComplete!'
 	return ret
 	
 #go full retard as a baseline

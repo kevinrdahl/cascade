@@ -14,7 +14,7 @@ budget = int(sys.argv[3])
 
 network = {}
 
-print 'LOADING...'
+print 'Loading Network...'
 
 for edge in f:
 	nodes = edge.split()
@@ -22,10 +22,10 @@ for edge in f:
 		node = int(nodes[i])
 		if node not in network:
 			network[node] = {'id':node, 'friends':[]}
-			if len(network) % 250 == 0:
-				print '  ' + str(len(network))
+			sys.stdout.write('\r  ' + str(len(network)) + ' nodes')
+			sys.stdout.flush()
 		network[node]['friends'].append(int(nodes[(i+1)%2]))
-	
+
 f.close()
 
 # use network for centrality param
@@ -35,7 +35,7 @@ for node in network:
 network = nodeList
 del nodeList
 
-print 'LOADED (' + str(len(network)) + ')'
+print '\nComplete!'
 
 if method == 'DEG':
 	centralities = centrality.degree(network)
@@ -50,5 +50,8 @@ else:
 	quit()
 
 adopters = cascade.selectTopN(budget, centralities)
+
+print '\nInitial Adopters:'
+print adopters
 
 cascade.tryCascade(network, adopters)

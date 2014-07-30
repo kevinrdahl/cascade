@@ -1,8 +1,4 @@
 def tryCascade(network, adopters):
-	print ''
-	print 'Initial Adopters:'
-	print adopters
-
 	neighbours = []
 	rounds = 0
 
@@ -47,7 +43,7 @@ def tryCascade(network, adopters):
 			numAdopters += 1
 			
 	print ''
-	print ('network of ' + str(len(network)))
+	print ('Network of ' + str(len(network)))
 	print (str(numAdopters) + ' adopters in ' + str(rounds) + ' rounds')
 	
 # centralities = [(id, value)*]	
