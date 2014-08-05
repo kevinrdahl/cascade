@@ -5,13 +5,14 @@ import cascade
 import centrality
 import distribution
 
-if (len(sys.argv) != 4):
-	print 'python main.py <network file> <DEG/BTWN/CLS> <budget>'
+if (len(sys.argv) != 5):
+	print 'python main.py <network file> <DEG/BTWN/CLS> <UNIFORM/NORMAL/LONGTAIL> <budget>'
 	quit()
 
 f = open(sys.argv[1], 'r')
 method = sys.argv[2]
-budget = int(sys.argv[3])
+distro = sys.argv[3]
+budget = int(sys.argv[4])
 
 network = {}
 
@@ -28,6 +29,18 @@ for edge in f:
 		network[node]['friends'].append(int(nodes[(i+1)%2]))
 
 f.close()
+
+# do distribution somewhere here
+
+if distro == 'UNIFORM':
+	thresholds = distribution.uniform(network, 0, 1)
+elif method == 'NORMAL':
+	thresholds = distribution.normal(network, 0.5, 1)
+elif method == 'LONGTAIL':
+	thresholds = distribution.longtail(network, 0, 1, 2)
+else:
+	print 'Distribution should be UNIFORM, NORMAL, or LONGTAIL'
+	quit()
 
 # use network for centrality param
 nodeList = []
