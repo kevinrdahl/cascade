@@ -3,6 +3,7 @@ import io
 
 import cascade
 import centrality
+import distribution
 
 if (len(sys.argv) != 4):
 	print 'python main.py <network file> <DEG/BTWN/CLS> <budget>'
