@@ -2,6 +2,7 @@ import random
 import sys
 
 def degree(network):
+	print '\nComputing degree centrality...'
 	ret = []
 	for node in network:
 		ret.append((node['id'], len(node['friends'])))
