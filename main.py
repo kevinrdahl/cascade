@@ -6,17 +6,25 @@ import centrality
 import distribution
 
 if (len(sys.argv) != 5):
-	print 'python main.py <network file> <DEG/BTWN/CLS> <UNIFORM/NORMAL/LONGTAIL> <budget>'
+	print '''python main.py 
+			<network file>
+			<UNIFORM/NORMAL/LONGTAIL> 
+			<budgets (comma separated)> 
+			<# of trials>'''
 	quit()
 
-f = open(sys.argv[1], 'r')
-method = sys.argv[2]
-distro = sys.argv[3]
-budget = int(sys.argv[4])
+try:
+	f = open(sys.argv[1], 'r')
+	distro = sys.argv[2]
+	budgets = [int(num) for num in sys.argv[3].split(',')]
+	numTrials = int(sys.argv[4])
+except:
+	print 'Something has gone horribly wrong.'
+	quit()
 
 network = {}
 
-print 'Loading Network...'
+print '\nLoading Network...'
 
 for edge in f:
 	nodes = edge.split()
@@ -29,17 +37,7 @@ for edge in f:
 		network[node]['friends'].append(int(nodes[(i+1)%2]))
 
 f.close()
-print ''
-
-if distro == 'UNIFORM':
-	thresholds = distribution.uniform(network, 0, 1)
-elif distro == 'NORMAL':
-	thresholds = distribution.normal(network, 0.5, 1)
-elif distro == 'LONGTAIL':
-	thresholds = distribution.longtail(network, 0, 1, 2)
-else:
-	print 'Distribution should be UNIFORM, NORMAL, or LONGTAIL'
-	quit()
+print '\n'
 
 # use network for centrality param
 nodeList = []
@@ -47,24 +45,53 @@ for node in network:
 	nodeList.append(network[node])
 network = nodeList
 del nodeList
+	
+centralities = 	{
+				'Degree' : centrality.degree(network),
+				'Betweenness' : centrality.betweenness(network),
+				'Closeness' : centrality.closeness(network)
+				}
+
+hybrid = centrality.hybrid( [centralities[name] for name in centralities] )
+centralities['Hybrid'] = hybrid
+
+results = {budget:{method:[] for method in centralities} for budget in budgets}
+
+print ''
+for trial in range(numTrials):
+	thresholds = []
+	if distro == 'UNIFORM':
+		thresholds = distribution.uniform(network, 0, 1)
+	elif distro == 'NORMAL':
+		thresholds = distribution.normal(network, 0.5, 0.33)
+	elif distro == 'LONGTAIL':
+		thresholds = distribution.longtail(network, 0, 1, 2)
+	else:
+		print '\nDistribution should be UNIFORM, NORMAL, or LONGTAIL'
+		quit()
+		
+	for i in range(len(thresholds)):
+		network[i]['threshold'] = thresholds[i]
+	
+	for i in range(len(budgets)):
+		budget = budgets[i]
+		methodCount = 0
+		for method in centralities:
+			methodCount += 1
+			sys.stdout.write('\rTrial ' + str(trial+1) + '/' + str(numTrials) + ', ')
+			sys.stdout.write('Budget ' + str(i+1) + '/' + str(len(budgets)) + ', ')
+			sys.stdout.write('Method ' + str(methodCount) + '/' + str(len(centralities)))
+			sys.stdout.flush()
+			adopters = cascade.selectTopN(budget, centralities[method])
+			results[budget][method].append(cascade.tryCascade(network, adopters)[0])
+			
+print '\n\n===RESULTS==='
+for budget in budgets:
+	print '\n' + str(budget) + ' initial adopters:'
+	for method in centralities:
+		scores = results[budget][method]
+		scores.append(float(sum(scores))/len(scores))
+		print method + ': ' + str(scores[-1]) + ' / ' + str(len(network))
+			
 
 print '\nComplete!'
-
-if method == 'DEG':
-	centralities = centrality.degree(network)
-elif method == 'BTWN':
-	centralities = centrality.betweenness(network)
-elif method == 'CLS':
-	centralities = centrality.closeness(network)
-elif method == 'RAND':
-	centralities = centrality.rand(network)
-else:
-	print 'method should be DEG, BTWN, or CLS'
-	quit()
-
-adopters = cascade.selectTopN(budget, centralities)
-
-print '\nInitial Adopters:'
-print adopters
-
-cascade.tryCascade(network, adopters)

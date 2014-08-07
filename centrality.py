@@ -1,21 +1,26 @@
 import random
 import sys
+import math
 
 def degree(network):
-	print '\nComputing degree centrality...'
+	print 'Computing network degree...'
 	ret = []
+	netlen = len(network)
 	for node in network:
+		sys.stdout.write('\r  ' + str(node['id']+1) + ' / ' + str(netlen) + ' (' + str(100*(node['id']+1)/netlen) + '%)')
+		sys.stdout.flush()
 		ret.append((node['id'], len(node['friends'])))
+	print ''
 	return ret
 	
 def betweenness(network):
-	print '\nComputing network betweenness...'
+	print 'Computing network betweenness...'
 
 	ret = [0 for node in network]
 	netlen = len(network)
 	
 	for node in network:
-		sys.stdout.write('\r  ' + str(node['id']) + ' / ' + str(netlen) + ' (' + str(100*node['id']/netlen) + '%)')
+		sys.stdout.write('\r  ' + str(node['id']+1) + ' / ' + str(netlen) + ' (' + str(100*(node['id']+1)/netlen) + '%)')
 		sys.stdout.flush()
 		#BFS
 		layers = [ { node['id']:{'parents':[], 'flow':0, 'seen':False}} ]
@@ -53,18 +58,18 @@ def betweenness(network):
 			
 	for i in range(len(ret)):
 		ret[i] = (i, ret[i])
-	print '\nComplete!'
+	print ''
 	return ret
 					
 #assumes that the graph is connected
 def closeness(network):
-	print '\nComputing network closeness...'
+	print 'Computing network closeness...'
 	
 	ret = [0 for node in network]
 	netlen = len(network)
 	
 	for node in network:
-		sys.stdout.write('\r  ' + str(node['id']) + ' / ' + str(netlen) + ' (' + str(100*node['id']/netlen) + '%)')
+		sys.stdout.write('\r  ' + str(node['id']+1) + ' / ' + str(netlen) + ' (' + str(100*(node['id']+1)/netlen) + '%)')
 		sys.stdout.flush()
 		depth = 0
 		prevLayer = {node['id']:0} #stupid but appears to perform better
@@ -88,8 +93,40 @@ def closeness(network):
 	num = len(network)-1
 	for i in range(len(ret)):
 		ret[i] = (i, num / float(ret[i]))
-	print '\nComplete!'
+	print ''
 	return ret
+	
+#returns highest z-scores from among each centrality
+def hybrid(centralities):
+	print 'Computing highest z-scores...'
+	ret = []
+	zscores = []
+
+	for centrality in centralities:
+		centrality.sort(key=index) #can't be too careful these days
+		z = []
+		avg = 0
+		for pair in centrality:
+			avg += pair[1]
+		avg = float(avg) / len(centrality)
+		
+		var = 0
+		for pair in centrality:
+			var += (pair[1]-avg)**2
+		var = float(var) / len(centrality)
+		sd = math.sqrt(var)
+		
+		for pair in centrality:
+			z.append(float(pair[1]-avg)/sd)
+		zscores.append(z)
+		
+	for i in range(len(centralities[0])):
+		scores = [z[i] for z in zscores]
+		ret.append((i, max(scores)))
+	return ret
+
+def index(iVal):
+	return iVal[0]
 	
 #go full retard as a baseline
 def rand(network):

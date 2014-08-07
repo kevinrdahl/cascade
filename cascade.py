@@ -4,7 +4,6 @@ def tryCascade(network, adopters):
 
 	for i in range(len(network)):
 		network[i]['adopted'] = False
-		network[i]['threshold'] = 0.3 #temporary
 		
 	# while there are new adopters
 	while len(adopters) > 0:
@@ -42,9 +41,8 @@ def tryCascade(network, adopters):
 		if (network[i]['adopted']):
 			numAdopters += 1
 			
-	print ''
-	print ('Network of ' + str(len(network)))
-	print (str(numAdopters) + ' adopters in ' + str(rounds) + ' rounds')
+	#print (str(numAdopters) + ' / ' + str(len(network)) + ' adopters in ' + str(rounds) + ' rounds')
+	return (numAdopters, rounds);
 	
 # centralities = [(id, value)*]	
 def selectTopN(budget, centralities):

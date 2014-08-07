@@ -2,14 +2,20 @@ import random
 
 def uniform(network, min, max):
 	random.seed()
-	return [(i,random.uniform(max, min)) for i in range(len(network))]
+	return [random.uniform(max, min) for i in range(len(network))]
 
 def normal(network, mean, sigma):
 	random.seed()
-	return [(i,random.normalvariate(mean, sigma)) for i in range(len(network))]
+	ret = []
+	for i in range(len(network)):
+		t = -1
+		while (t < 0 or t > 1):
+			t = random.normalvariate(mean, sigma)
+		ret.append(t)
+	return ret
 
 def longtail(network, min, max, power):
-	return [(i,powerlaw(min, max, power)) for i in range(len(network))]
+	return [powerlaw(min, max, power) for i in range(len(network))]
 
 # got this formula from wolfram mathworld http://mathworld.wolfram.com/RandomNumber.html
 # x = ret, x0 = min, x1 = max, y = rand, n = power
