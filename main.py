@@ -29,14 +29,13 @@ for edge in f:
 		network[node]['friends'].append(int(nodes[(i+1)%2]))
 
 f.close()
-
-# do distribution somewhere here
+print ''
 
 if distro == 'UNIFORM':
 	thresholds = distribution.uniform(network, 0, 1)
-elif method == 'NORMAL':
+elif distro == 'NORMAL':
 	thresholds = distribution.normal(network, 0.5, 1)
-elif method == 'LONGTAIL':
+elif distro == 'LONGTAIL':
 	thresholds = distribution.longtail(network, 0, 1, 2)
 else:
 	print 'Distribution should be UNIFORM, NORMAL, or LONGTAIL'
