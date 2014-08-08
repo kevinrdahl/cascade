@@ -45,11 +45,18 @@ def tryCascade(network, adopters):
 	return (numAdopters, rounds);
 	
 # centralities = [(id, value)*]	
-def selectTopN(budget, centralities):
-	centralities.sort(key=val, reverse=True)
+def selectTopN(network, budget, centralities, useThresh):
+	vals = []
+	for pair in centralities:
+		if (useThresh):
+			t = network[pair[0]]['threshold']
+		else:
+			t = 1.0
+		vals.append((pair[0], float(t)*pair[1]))
+	vals.sort(key=val, reverse=True)
 	adopters = []
 	for i in range(budget):
-		adopters.append(centralities[i][0])
+		adopters.append(vals[i][0])
 	return adopters
 	
 def val(iVal):

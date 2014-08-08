@@ -4,13 +4,15 @@ import io
 import cascade
 import centrality
 import distribution
+import output
 
-if (len(sys.argv) != 5):
+if (len(sys.argv) != 6):
 	print '''python main.py 
 			<network file>
 			<UNIFORM/NORMAL/LONGTAIL> 
 			<budgets (comma separated)> 
-			<# of trials>'''
+			<# of trials>
+			<use thresh (y/n)>'''
 	quit()
 
 try:
@@ -18,6 +20,10 @@ try:
 	distro = sys.argv[2]
 	budgets = [int(num) for num in sys.argv[3].split(',')]
 	numTrials = int(sys.argv[4])
+	if (sys.argv[5] == 'y'):
+		useThreshold = True
+	else:
+		useThreshold = False
 except:
 	print 'Something has gone horribly wrong.'
 	quit()
@@ -51,11 +57,9 @@ centralities = 	{
 				'Betweenness' : centrality.betweenness(network),
 				'Closeness' : centrality.closeness(network)
 				}
+centralities['Hybrid'] = centrality.hybrid( [centralities[name] for name in centralities] )
 
-hybrid = centrality.hybrid( [centralities[name] for name in centralities] )
-centralities['Hybrid'] = hybrid
-
-results = {budget:{method:[] for method in centralities} for budget in budgets}
+results = 0
 
 print ''
 for trial in range(numTrials):
@@ -74,6 +78,9 @@ for trial in range(numTrials):
 		#print 'thresholds[' + str(i) + '] = ' + str(thresholds[i])
 		network[i]['threshold'] = thresholds[i]
 	
+	if results == 0:
+		results = {budget:{method:[] for method in centralities} for budget in budgets}
+	
 	for i in range(len(budgets)):
 		budget = budgets[i]
 		methodCount = 0
@@ -83,7 +90,7 @@ for trial in range(numTrials):
 			sys.stdout.write('Budget ' + str(i+1) + '/' + str(len(budgets)) + ', ')
 			sys.stdout.write('Method ' + str(methodCount) + '/' + str(len(centralities)))
 			sys.stdout.flush()
-			adopters = cascade.selectTopN(budget, centralities[method])
+			adopters = cascade.selectTopN(network, budget, centralities[method], useThreshold)
 			results[budget][method].append(cascade.tryCascade(network, adopters)[0])
 			
 print '\n\n===RESULTS==='
@@ -93,6 +100,8 @@ for budget in budgets:
 		scores = results[budget][method]
 		scores.append(float(sum(scores))/len(scores))
 		print method + ': ' + str(scores[-1]) + ' / ' + str(len(network))
+		
+output.CSV(budgets, centralities, results, distro)
 			
 
 print '\nComplete!'

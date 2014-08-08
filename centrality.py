@@ -98,7 +98,6 @@ def closeness(network):
 	
 #returns highest z-scores from among each centrality
 def hybrid(centralities):
-	print 'Computing highest z-scores...'
 	ret = []
 	zscores = []
 
@@ -127,6 +126,12 @@ def hybrid(centralities):
 
 def index(iVal):
 	return iVal[0]
+	
+def threshold(network):
+	ret = []
+	for node in network:
+		ret.append((node['id'], node['threshold']))
+	return ret
 	
 #go full retard as a baseline
 def rand(network):
