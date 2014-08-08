@@ -10,7 +10,7 @@ def normal(network):
 	for i in range(len(network)):
 		t = -1
 		while (t < 0 or t > 1):
-			t = random.normalvariate(0.5, 0.333)
+			t = random.normalvariate(0.5, 0.1666666667)
 		ret.append(t)
 	return ret
 
