@@ -61,16 +61,17 @@ print ''
 for trial in range(numTrials):
 	thresholds = []
 	if distro == 'UNIFORM':
-		thresholds = distribution.uniform(network, 0, 1)
+		thresholds = distribution.uniform(network)
 	elif distro == 'NORMAL':
 		thresholds = distribution.normal(network, 0.5, 0.33)
 	elif distro == 'LONGTAIL':
-		thresholds = distribution.longtail(network, 0, 1, 2)
+		thresholds = distribution.longtail(network, 20)
 	else:
 		print '\nDistribution should be UNIFORM, NORMAL, or LONGTAIL'
 		quit()
 		
 	for i in range(len(thresholds)):
+		#print 'thresholds[' + str(i) + '] = ' + str(thresholds[i])
 		network[i]['threshold'] = thresholds[i]
 	
 	for i in range(len(budgets)):
