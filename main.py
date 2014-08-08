@@ -63,7 +63,7 @@ for trial in range(numTrials):
 	if distro == 'UNIFORM':
 		thresholds = distribution.uniform(network)
 	elif distro == 'NORMAL':
-		thresholds = distribution.normal(network, 0.5, 0.33)
+		thresholds = distribution.normal(network)
 	elif distro == 'LONGTAIL':
 		thresholds = distribution.longtail(network, 20)
 	else:
@@ -93,6 +93,5 @@ for budget in budgets:
 		scores = results[budget][method]
 		scores.append(float(sum(scores))/len(scores))
 		print method + ': ' + str(scores[-1]) + ' / ' + str(len(network))
-			
 
 print '\nComplete!'

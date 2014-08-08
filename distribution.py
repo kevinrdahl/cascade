@@ -4,13 +4,13 @@ def uniform(network):
 	random.seed()
 	return [random.random() for i in range(len(network))]
 
-def normal(network, mean, sigma):
+def normal(network):
 	random.seed()
 	ret = []
 	for i in range(len(network)):
 		t = -1
 		while (t < 0 or t > 1):
-			t = random.normalvariate(mean, sigma)
+			t = random.normalvariate(0.5, 0.333)
 		ret.append(t)
 	return ret
 
